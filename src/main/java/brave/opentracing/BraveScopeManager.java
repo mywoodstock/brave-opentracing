@@ -75,6 +75,7 @@ public final class BraveScopeManager implements ScopeManager {
 
   @Override public BraveScope activate(Span span, boolean finishSpanOnClose) {
     if (span == null) return null;
+    System.out.println("ACTIVATE SPAN: " + span.toString());
     if (!(span instanceof BraveSpan)) {
       throw new IllegalArgumentException(
           "Span must be an instance of brave.opentracing.BraveSpan, but was " + span.getClass());

@@ -151,6 +151,10 @@ public final class BraveTracer implements Tracer {
    * Injects the underlying context using B3 encoding by default.
    */
   @Override public <C> void inject(SpanContext spanContext, Format<C> format, C carrier) {
+    System.out.println("SPAN CONTEXT: " + spanContext.toString());
+    System.out.println("FORMAT: " + format);
+    System.out.println("CARRIER: " + carrier);
+    System.out.println("FORMAT TO INJECTOR: " + formatToInjector);
     Injector<TextMap> injector = formatToInjector.get(format);
     if (injector == null) {
       throw new UnsupportedOperationException(format + " not in " + formatToInjector.keySet());

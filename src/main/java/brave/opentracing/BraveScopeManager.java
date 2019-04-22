@@ -52,14 +52,14 @@ public final class BraveScopeManager implements ScopeManager {
     return new Scope() {
       @Override public void close() {
         // no-op
-        Deque<BraveScope> scopes = currentScopes.get();
-        while (!scopes.isEmpty()) {
-          System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-          Scope scope = scopes.pop();
-          scope.span().finish();
-          scope.close();
-        }
-        span.finish();
+        //Deque<BraveScope> scopes = currentScopes.get();
+        //while (!scopes.isEmpty()) {
+        //  System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+        //  Scope scope = scopes.pop();
+        //  scope.span().finish();
+        //  scope.close();
+        //}
+        //span.finish();
       }
 
       @Override public Span span() {
@@ -84,8 +84,7 @@ public final class BraveScopeManager implements ScopeManager {
 
   @Override public BraveScope activate(Span span, boolean finishSpanOnClose) {
     if (span == null) return null;
-    System.out.println("ACTIVATE SPAN: " + span.toString());
-    System.out.println("ACTIVATE SPAN: " + span.getClass());
+    //System.out.println("ACTIVATE SPAN: " + span.getClass());
     if (!(span instanceof BraveSpan)) {
       throw new IllegalArgumentException(
           "Span must be an instance of brave.opentracing.BraveSpan, but was " + span.getClass());

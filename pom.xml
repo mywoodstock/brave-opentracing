@@ -24,17 +24,18 @@
   <description>Zipkin OpenTracing Brave bridge</description>
   <inceptionYear>2016</inceptionYear>
 
-  <version>0.33.12-SNAPSHOT</version>
+  <version>0.33.12-WOODSTOCK</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
 
-    <brave.version>5.6.2</brave.version>
+    <!--<brave.version>5.6.2</brave.version>-->
+    <brave.version>5.6.4-SNAPSHOT</brave.version>
 
     <!-- default bytecode version for src/main -->
-    <main.java.version>1.6</main.java.version>
-    <main.signature.artifact>java16</main.signature.artifact>
+    <main.java.version>1.8</main.java.version>
+    <main.signature.artifact>java18</main.signature.artifact>
 
     <!-- default bytecode version for src/test -->
     <maven.compiler.source>1.8</maven.compiler.source>

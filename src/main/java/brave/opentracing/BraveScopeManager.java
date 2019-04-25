@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 The OpenZipkin Authors
+ * Copyright 2016-2019 The OpenZipkin Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -75,6 +75,7 @@ public final class BraveScopeManager implements ScopeManager {
 
   @Override public BraveScope activate(Span span, boolean finishSpanOnClose) {
     if (span == null) return null;
+    System.out.println("CLASS: " + span.getClass());
     if (!(span instanceof BraveSpan)) {
       throw new IllegalArgumentException(
           "Span must be an instance of brave.opentracing.BraveSpan, but was " + span.getClass());

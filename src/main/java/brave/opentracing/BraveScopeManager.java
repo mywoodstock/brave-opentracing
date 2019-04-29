@@ -48,15 +48,18 @@ public final class BraveScopeManager implements ScopeManager {
   @Override public Scope active() {
     BraveSpan span = currentSpan();
     if (span == null) return null;
-    return new Scope() {
-      @Override public void close() {
+    System.out.println("A CHANGE IS HERE: " + span.unwrap());
+    return (Scope) newScope(span, true);
+    //return new Scope() {
+    //  @Override public void close() {
         // no-op
-      }
-
-      @Override public Span span() {
-        return span;
-      }
-    };
+        //System.out.println("I NEED THIS TO BE CLOSED!!");
+      //}
+      //
+      //@Override public Span span() {
+      //  return span;
+      //}
+    //};
   }
 
   /** Attempts to get a span from the current api, falling back to brave's native one */
@@ -76,10 +79,10 @@ public final class BraveScopeManager implements ScopeManager {
   @Override public BraveScope activate(Span span, boolean finishSpanOnClose) {
     if (span == null) return null;
     System.out.println("CLASS: " + span.getClass());
-    if (!(span instanceof BraveSpan)) {
-      throw new IllegalArgumentException(
-          "Span must be an instance of brave.opentracing.BraveSpan, but was " + span.getClass());
-    }
+    //if (!(span instanceof BraveSpan)) {
+    //  throw new IllegalArgumentException(
+    //      "Span must be an instance of brave.opentracing.BraveSpan, but was " + span.getClass());
+    //}
     return newScope((BraveSpan) span, finishSpanOnClose);
   }
 

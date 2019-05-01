@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 The OpenZipkin Authors
+ * Copyright 2016-2019 The OpenZipkin Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -115,11 +115,17 @@ public final class BraveSpanBuilder implements Tracer.SpanBuilder {
   @Override public BraveSpan start() {
     boolean server = Tags.SPAN_KIND_SERVER.equals(tags.get(Tags.SPAN_KIND.getKey()));
 
+    System.out.println("IGNORE ACTIVE SPAN: " + ignoreActiveSpan);
+
     // Check if active span should be established as CHILD_OF relationship
     if (reference == null && !ignoreActiveSpan) {
       Scope parent = tracer.scopeManager().active();
+
       if (parent != null) {
         asChildOf(parent.span());
+
+        System.out.println("PARENT SPAN: " + parent.span());
+
       }
     }
 
@@ -143,14 +149,24 @@ public final class BraveSpanBuilder implements Tracer.SpanBuilder {
         }
       }
       span = scopedBraveTracer.newTrace();
+
+      System.out.println("NEW TRACE SPAN: " + span);
+
     } else if ((context = reference.unwrap()) != null) {
       // Zipkin's default is to share a span ID between the client and the server in an RPC.
       // When we start a server span with a parent, we assume the "parent" is actually the
       // client on the other side of the RPC. Accordingly, we join that span instead of fork.
       span = server ? braveTracer.joinSpan(context) : braveTracer.newChild(context);
+
+      System.out.println("JOIN/CHILD TRACE SPAN: " + span);
+
     } else {
       span = braveTracer.nextSpan(((BraveSpanContext.Incomplete) reference).extractionResult());
+
+      System.out.println("NEXT TRACE SPAN: " + span);
     }
+
+    System.out.println("NEW SPAN: " + span);
 
     if (operationName != null) span.name(operationName);
     BraveSpan result = new BraveSpan(braveTracer, span);
@@ -164,6 +180,8 @@ public final class BraveSpanBuilder implements Tracer.SpanBuilder {
     } else {
       span.start();
     }
+
+    System.out.println("SPAN HAS STARTED: " + span);
 
     return result;
   }

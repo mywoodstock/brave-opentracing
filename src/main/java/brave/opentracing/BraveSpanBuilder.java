@@ -20,6 +20,7 @@ import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
+import io.opentracing.tag.Tag;
 import io.opentracing.tag.Tags;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -86,6 +87,10 @@ public final class BraveSpanBuilder implements Tracer.SpanBuilder {
       return this;
     }
     return withTag(key, value.toString());
+  }
+
+  @Override public <T> BraveSpanBuilder withTag(Tag<T> tag, T value) {
+    return withTag(tag.getKey(), value.toString());
   }
 
   @Override public BraveSpanBuilder withStartTimestamp(long microseconds) {

@@ -25,6 +25,7 @@ import brave.propagation.TraceContext.Injector;
 import brave.propagation.TraceContextOrSamplingFlags;
 import io.opentracing.Scope;
 import io.opentracing.ScopeManager;
+import io.opentracing.Span;
 import io.opentracing.SpanContext;
 import io.opentracing.Tracer;
 import io.opentracing.propagation.Format;
@@ -132,6 +133,15 @@ public final class BraveTracer implements Tracer {
       formatToInjector.put(entry.getKey(), entry.getValue().injector(TEXT_MAP_SETTER));
       formatToExtractor.put(entry.getKey(), new TextMapExtractorAdaptor(entry.getValue()));
     }
+  }
+
+  @Override public void close() {
+    // TODO: investigate what needs to be done here. For now just log and no-op.
+    System.out.println("===== CLOSE =====");
+  }
+
+  @Override public BraveScope activateSpan(Span span) {
+    return this.scopeManager.activate(span);
   }
 
   @Override public BraveScopeManager scopeManager() {

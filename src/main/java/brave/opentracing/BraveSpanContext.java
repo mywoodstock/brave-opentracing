@@ -46,6 +46,16 @@ public abstract class BraveSpanContext implements SpanContext {
   /** Returns empty unless {@link ExtraFieldPropagation} is in use */
   @Override public abstract Iterable<Map.Entry<String, String>> baggageItems();
 
+  @Override public String toTraceId() {
+    // TODO: For now just return some constant ID
+    return "aaaaaaaaaaaaaaaa";
+  }
+
+  @Override public String toSpanId() {
+    // TODO: For now just return some constant ID
+    return "bbbbbbbb";
+  }
+
   static BraveSpanContext create(TraceContext context) {
     return new Complete(context);
   }

@@ -94,7 +94,7 @@ public final class BraveSpan implements Span {
     return setTag(key, value.toString());
   }
 
-  @Override <T> BraveSpan setTag(Tag<T> tag, T value) {
+  @Override public <T> BraveSpan setTag(Tag<T> tag, T value) {
     return setTag(tag.getKey(), value.toString());
   }
 

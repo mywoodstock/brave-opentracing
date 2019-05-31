@@ -59,6 +59,10 @@ public final class BraveScopeManager implements ScopeManager {
     };
   }
 
+  @Override public BraveSpan activeSpan() {
+    return currentSpan();
+  }
+
   /** Attempts to get a span from the current api, falling back to brave's native one */
   BraveSpan currentSpan() {
     BraveScope scope = currentScopes.get().peekFirst();
@@ -73,6 +77,7 @@ public final class BraveScopeManager implements ScopeManager {
     return null;
   }
 
+
   @Override public BraveScope activate(Span span, boolean finishSpanOnClose) {
     if (span == null) return null;
     if (!(span instanceof BraveSpan)) {
@@ -80,6 +85,15 @@ public final class BraveScopeManager implements ScopeManager {
           "Span must be an instance of brave.opentracing.BraveSpan, but was " + span.getClass());
     }
     return newScope((BraveSpan) span, finishSpanOnClose);
+  }
+
+  @Override public BraveScope activate(Span span) {
+    if (span == null) return null;
+    if (!(span instanceof BraveSpan)) {
+      throw new IllegalArgumentException(
+          "Span must be an instance of brave.opentracing.BraveSpan, but was " + span.getClass());
+    }
+    return newScope((BraveSpan) span, true);
   }
 
   BraveScope newScope(BraveSpan span, boolean finishSpanOnClose) {

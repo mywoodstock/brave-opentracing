@@ -16,6 +16,7 @@ package brave.opentracing;
 import brave.Tracer;
 import brave.propagation.ExtraFieldPropagation;
 import io.opentracing.Span;
+import io.opentracing.tag.Tag;
 import io.opentracing.tag.Tags;
 import java.util.Iterator;
 import java.util.Map;
@@ -91,6 +92,10 @@ public final class BraveSpan implements Span {
       delegate = tracer.toSpan(delegate.context().toBuilder().sampled(false).build());
     }
     return setTag(key, value.toString());
+  }
+
+  @Override <T> BraveSpan setTag(Tag<T> tag, T value) {
+    return setTag(tag.getKey(), value.toString());
   }
 
   @Override public BraveSpan log(Map<String, ?> fields) {

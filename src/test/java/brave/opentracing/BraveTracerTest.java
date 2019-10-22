@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 The OpenZipkin Authors
+ * Copyright 2016-2019 The OpenZipkin Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -93,7 +93,7 @@ public class BraveTracerTest {
 
     BraveSpanContext openTracingContext =
         (BraveSpanContext) opentracing.extract(Format.Builtin.HTTP_HEADERS,
-            new TextMapExtractAdapter(map));
+                                               (TextMap) new TextMapExtractAdapter(map));
 
     assertThat(openTracingContext.unwrap())
         .isEqualTo(TraceContext.newBuilder()
@@ -110,7 +110,7 @@ public class BraveTracerTest {
     map.put("baggage-country-code", "FO");
 
     BraveSpanContext openTracingContext = opentracing.extract(Format.Builtin.HTTP_HEADERS,
-        new TextMapExtractAdapter(map));
+                                                              (TextMap) new TextMapExtractAdapter(map));
 
     assertThat(openTracingContext.baggageItems())
         .containsExactly(entry("country-code", "FO"));
@@ -124,7 +124,7 @@ public class BraveTracerTest {
 
     BraveSpanContext openTracingContext =
         (BraveSpanContext) opentracing.extract(Format.Builtin.TEXT_MAP,
-            new TextMapExtractAdapter(map));
+                                               (TextMap) new TextMapExtractAdapter(map));
 
     assertThat(openTracingContext.unwrap())
         .isEqualTo(TraceContext.newBuilder()
@@ -142,7 +142,7 @@ public class BraveTracerTest {
 
     BraveSpanContext openTracingContext =
         (BraveSpanContext) opentracing.extract(Format.Builtin.HTTP_HEADERS,
-            new TextMapExtractAdapter(map));
+                                               (TextMap) new TextMapExtractAdapter(map));
 
     assertThat(openTracingContext.unwrap())
         .isEqualTo(TraceContext.newBuilder()
@@ -156,7 +156,7 @@ public class BraveTracerTest {
     map.put("other", "1");
 
     BraveSpanContext openTracingContext = opentracing.extract(Format.Builtin.HTTP_HEADERS,
-            new TextMapExtractAdapter(map));
+                                                              (TextMap) new TextMapExtractAdapter(map));
 
     assertThat(openTracingContext.unwrap()).isNull();
   }
@@ -169,7 +169,8 @@ public class BraveTracerTest {
 
     Map<String, String> map = new LinkedHashMap<>();
     TextMapInjectAdapter carrier = new TextMapInjectAdapter(map);
-    opentracing.inject(BraveSpanContext.create(context), Format.Builtin.HTTP_HEADERS, carrier);
+    opentracing.inject(BraveSpanContext.create(context), Format.Builtin.HTTP_HEADERS,
+                       (TextMap) carrier);
 
     assertThat(map).containsExactly(
         entry("X-B3-TraceId", "0000000000000001"),
@@ -184,7 +185,7 @@ public class BraveTracerTest {
 
     Map<String, String> map = new LinkedHashMap<>();
     TextMapInjectAdapter carrier = new TextMapInjectAdapter(map);
-    opentracing.inject(span.context(), Format.Builtin.HTTP_HEADERS, carrier);
+    opentracing.inject(span.context(), Format.Builtin.HTTP_HEADERS, (TextMap) carrier);
 
     assertThat(map).containsEntry("baggage-country-code", "FO");
   }
@@ -197,7 +198,8 @@ public class BraveTracerTest {
 
     Map<String, String> map = new LinkedHashMap<>();
     TextMapInjectAdapter carrier = new TextMapInjectAdapter(map);
-    opentracing.inject(BraveSpanContext.create(context), Format.Builtin.TEXT_MAP, carrier);
+    opentracing.inject(BraveSpanContext.create(context), Format.Builtin.TEXT_MAP,
+                       (TextMap) carrier);
 
     assertThat(map).containsExactly(
         entry("X-B3-TraceId", "0000000000000001"),
@@ -219,7 +221,7 @@ public class BraveTracerTest {
 
     Map<String, String> map = new LinkedHashMap<>();
     TextMapInjectAdapter carrier = new TextMapInjectAdapter(map);
-    opentracing.inject(BraveSpanContext.create(context), B3, carrier);
+    opentracing.inject(BraveSpanContext.create(context), B3, (TextMap) carrier);
 
     assertThat(map).containsExactly(
         entry("X-B3-TraceId", "0000000000000001"),

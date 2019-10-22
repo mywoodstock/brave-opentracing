@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 The OpenZipkin Authors
+ * Copyright 2016-2019 The OpenZipkin Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -25,6 +25,7 @@ import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.SpanContext;
 import io.opentracing.propagation.Format;
+import io.opentracing.propagation.TextMap;
 import io.opentracing.propagation.TextMapExtractAdapter;
 import io.opentracing.propagation.TextMapInjectAdapter;
 import io.opentracing.tag.Tags;
@@ -178,7 +179,8 @@ public class BraveSpanTest {
         .start();
 
     Map<String, String> carrier = new LinkedHashMap<>();
-    tracer.inject(spanClient.context(), Format.Builtin.TEXT_MAP, new TextMapInjectAdapter(carrier));
+    tracer.inject(spanClient.context(), Format.Builtin.TEXT_MAP,
+                  (TextMap) new TextMapInjectAdapter(carrier));
 
     BraveTracer tracer2 = BraveTracer.create(
         Tracing.newBuilder()
@@ -187,7 +189,7 @@ public class BraveSpanTest {
     );
 
     SpanContext extractedContext =
-        tracer2.extract(Format.Builtin.TEXT_MAP, new TextMapExtractAdapter(carrier));
+        tracer2.extract(Format.Builtin.TEXT_MAP, (TextMap) new TextMapExtractAdapter(carrier));
 
     Span spanServer = tracer2.buildSpan("foo")
         .asChildOf(extractedContext)
@@ -219,7 +221,7 @@ public class BraveSpanTest {
     carrier.put("client-id", "aloha");
 
     SpanContext extractedContext =
-        tracer.extract(Format.Builtin.TEXT_MAP, new TextMapExtractAdapter(carrier));
+        tracer.extract(Format.Builtin.TEXT_MAP, (TextMap) new TextMapExtractAdapter(carrier));
 
     assertThat(extractedContext.baggageItems())
         .contains(entry("client-id", "aloha"));
